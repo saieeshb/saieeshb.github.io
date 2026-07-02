@@ -60,6 +60,9 @@ const socialOrder: { key: keyof typeof profile.links; label: string; external: b
 const socials = socialOrder
   .map((s) => ({ ...s, href: (profile.links as Record<string, string>)[s.key] }))
   .filter((s) => s.href);
+
+const gradYear = education[0]?.period.match(/\d{4}/)?.[0]?.slice(2) ?? '';
+const fileNo = `FILE ${initials}${gradYear ? '-' + gradYear : ''}`;
 ---
 
 <Layout>
@@ -67,14 +70,14 @@ const socials = socialOrder
   <nav class="nav">
     <div class="nav-inner">
       <a class="nav-brand" href="#top">
-        <span class="mono">{initials}</span>
+        <span class="brand-stamp">{initials}</span>
         <span>{profile.name}</span>
       </a>
       <div class="nav-right">
         <ul class="nav-links">
           {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
         </ul>
-        <button class="theme-toggle" type="button" aria-label="Switch to light mode">
+        <button class="theme-toggle" type="button" aria-label="Switch to monitor (dark) mode">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
         </button>
@@ -83,29 +86,34 @@ const socials = socialOrder
   </nav>
 
   <main id="top">
-    <!-- Hero -->
+    <!-- Hero — page one of the case file -->
     <header class="hero">
-      <canvas id="evidence-network" class="hero-canvas" aria-hidden="true"></canvas>
       <div class="container">
-        <span class="hero-eyebrow"><span class="dot"></span>Medical Student · Researcher · Surgery Aspirant </span>
+        <p class="file-line">
+          <span class="file-no">{fileNo}</span>
+          Medical Student · Researcher · Surgery Aspirant
+        </p>
         <h1>{profile.name}</h1>
         <p class="lede">{profile.tagline}</p>
         <p class="intro" set:html={profile.intro}></p>
-        <div class="hero-meta">
-          <span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-            {profile.location}
-          </span>
-          <span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            {profile.email}
-          </span>
-        </div>
+
+        <dl class="chart-fields">
+          <div>
+            <dt>Location</dt>
+            <dd>{profile.location}</dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd>{profile.email}</dd>
+          </div>
+          <div>
+            <dt>Institution</dt>
+            <dd>Osmania Medical College</dd>
+          </div>
+        </dl>
+
         <div class="cta-row">
-          <a class="btn btn-primary" href={`mailto:${profile.email}`}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-            Get in touch
-          </a>
+          <a class="btn btn-primary" href={`mailto:${profile.email}`}>Get in touch</a>
           <a class="btn btn-ghost" href="#research">View research</a>
         </div>
 
@@ -124,14 +132,19 @@ const socials = socialOrder
           ))}
         </div>
 
-        <div class="stats">
+        <div class="strip">
+          <canvas id="ecg-strip" aria-hidden="true"></canvas>
+          <span class="strip-label">Lead II · 25 mm/s · Sinus rhythm</span>
+        </div>
+
+        <dl class="vitals">
           {stats.map((s) => (
-            <div class="stat">
-              <div class="value">{s.value}</div>
-              <div class="label">{s.label}</div>
+            <div class="vital">
+              <dt>{s.label}</dt>
+              <dd>{s.value}</dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </header>
 
@@ -142,10 +155,10 @@ const socials = socialOrder
           <span class="num">01</span>
           <h2>Research Projects</h2>
         </div>
-        <div class="research-filters" role="tablist" aria-label="Filter research projects">
+        <div class="tabs" role="tablist" aria-label="Filter research projects">
           {researchFilters.map((filter) => (
             <button
-              class={`research-filter ${filter.key === 'all' ? 'is-active' : ''}`}
+              class={`tab ${filter.key === 'all' ? 'is-active' : ''}`}
               type="button"
               role="tab"
               aria-selected={filter.key === 'all' ? 'true' : 'false'}
@@ -155,34 +168,35 @@ const socials = socialOrder
             </button>
           ))}
         </div>
-        <div class="stack research-stack" id="researchGrid">
+        <div class="case-grid" id="researchGrid">
           {research.map((r) => (
-            <article class="card reveal" data-research-lanes={r.lanes?.join(' ') ?? ''}>
-              <div class="item-head">
+            <article class="case reveal" data-research-lanes={r.lanes?.join(' ') ?? ''}>
+              <div class="entry-head">
                 <div>
-                  {r.code && <div class="project-code">{r.code}</div>}
-                  <div class="item-title">{r.title}</div>
-                  <div class="item-org">{r.org}</div>
-                  {r.role && <div class="item-role">{r.role}</div>}
+                  {r.code && <div class="entry-code">{r.code}</div>}
+                  <div class="entry-title">{r.title}</div>
+                  <div class="entry-org">{r.org}</div>
+                  {r.role && <div class="entry-role">{r.role}</div>}
                 </div>
-                <span class="period">{r.period}</span>
+                <div class="entry-side">
+                  <span class="period">{r.period}</span>
+                  {r.status && <span class={`stamp ${r.status}`}>{researchStatusLabels[r.status]}</span>}
+                </div>
               </div>
-              <p class="item-desc">{r.description}</p>
-              {r.note && <p class="item-note">{r.note}</p>}
+              <p class="entry-desc">{r.description}</p>
+              {r.note && <p class="entry-note">{r.note}</p>}
               {r.contributions && (
-                <div class="contrib">
-                  <span class="contrib-label">Conducted</span>
-                  {r.contributions.map((c) => <span class="pill">{c}</span>)}
-                </div>
+                <p class="kw-line">
+                  <span class="kw-label">Conducted</span>
+                  <span class="kw-terms">{r.contributions.join('; ')}</span>
+                </p>
               )}
-              <div class="tags">
-                {r.status && (
-                  <span class={`badge ${r.status}`}>
-                    <span class="pip"></span>{researchStatusLabels[r.status]}
-                  </span>
-                )}
-                {r.tags?.map((t) => <span class="tag">{t}</span>)}
-              </div>
+              {r.tags && (
+                <p class="kw-line">
+                  <span class="kw-label">Keywords</span>
+                  <span class="kw-terms">{r.tags.join('; ')}</span>
+                </p>
+              )}
             </article>
           ))}
         </div>
@@ -197,24 +211,22 @@ const socials = socialOrder
           <h2>Publications &amp; Peer Review</h2>
         </div>
         <p class="pub-note">{publicationsNote}</p>
-        <div class="stack">
+        <ol class="refs">
           {publications.map((p, i) => (
-            <article class="card reveal">
-              <div class="pub">
-                <div class="marker">{i + 1}</div>
-                <div class="body">
-                  <div class="pub-title">{p.title}</div>
-                  <div class="pub-meta pub-authors">{p.authors}</div>
-                  <div class="pub-meta"><em>{p.journal}</em> · {p.year}</div>
-                  <a class="doi-link" href={p.url} target="_blank" rel="noopener noreferrer">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                    doi:{p.doi}
-                  </a>
-                </div>
+            <li class="ref reveal">
+              <span class="ref-num">[{i + 1}]</span>
+              <div>
+                <div class="ref-title">{p.title}</div>
+                <div class="ref-meta ref-authors">{p.authors}</div>
+                <div class="ref-meta"><em>{p.journal}</em> · {p.year}</div>
+                <a class="doi-link" href={p.url} target="_blank" rel="noopener noreferrer">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  doi:{p.doi}
+                </a>
               </div>
-            </article>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
 
@@ -225,17 +237,19 @@ const socials = socialOrder
           <span class="num">03</span>
           <h2>Editorial &amp; Peer-Review Roles</h2>
         </div>
-        <div class="grid-2">
+        <div class="case-grid">
           {editorial.map((e) => (
-            <article class="card reveal">
-              <div class="item-head">
+            <article class="case reveal">
+              <div class="entry-head">
                 <div>
-                  <div class="item-title">{e.role}</div>
-                  <div class="item-org">{e.org}</div>
+                  <div class="entry-title">{e.role}</div>
+                  <div class="entry-org">{e.org}</div>
                 </div>
-                <span class="period">{e.period}</span>
+                <div class="entry-side">
+                  <span class="period">{e.period}</span>
+                </div>
               </div>
-              <p class="item-desc">{e.description}</p>
+              <p class="entry-desc">{e.description}</p>
             </article>
           ))}
         </div>
@@ -249,15 +263,17 @@ const socials = socialOrder
           <span class="num">04</span>
           <h2>Experience &amp; Leadership</h2>
         </div>
-        <div class="stack">
+        <div class="ledger">
           {experience.map((e) => (
-            <article class="card reveal">
-              <div class="item-head">
+            <article class="row reveal">
+              <div class="entry-head">
                 <div>
-                  <div class="item-title">{e.role}</div>
-                  <div class="item-org">{e.org} · {e.location}</div>
+                  <div class="entry-title">{e.role}</div>
+                  <div class="entry-org">{e.org} · {e.location}</div>
                 </div>
-                <span class="period">{e.period}</span>
+                <div class="entry-side">
+                  <span class="period">{e.period}</span>
+                </div>
               </div>
               <ul class="bullets">
                 {e.points.map((pt) => <li>{pt}</li>)}
@@ -275,15 +291,17 @@ const socials = socialOrder
           <span class="num">05</span>
           <h2>Community &amp; Outreach Projects</h2>
         </div>
-        <div class="stack">
+        <div class="ledger">
           {projects.map((p) => (
-            <article class="card reveal">
-              <div class="item-head">
+            <article class="row reveal">
+              <div class="entry-head">
                 <div>
-                  <div class="item-title">{p.title}</div>
-                  <div class="item-org">{p.org} · {p.location}</div>
+                  <div class="entry-title">{p.title}</div>
+                  <div class="entry-org">{p.org} · {p.location}</div>
                 </div>
-                <span class="period">{p.period}</span>
+                <div class="entry-side">
+                  <span class="period">{p.period}</span>
+                </div>
               </div>
               <ul class="bullets">
                 {p.points.map((pt) => <li>{pt}</li>)}
@@ -301,15 +319,17 @@ const socials = socialOrder
           <span class="num">06</span>
           <h2>Education</h2>
         </div>
-        <div class="stack">
+        <div class="ledger">
           {education.map((ed) => (
-            <article class="card reveal">
-              <div class="item-head">
+            <article class="row reveal">
+              <div class="entry-head">
                 <div>
-                  <div class="item-title">{ed.institution}</div>
-                  <div class="item-org">{ed.degree}</div>
+                  <div class="entry-title">{ed.institution}</div>
+                  <div class="entry-org">{ed.degree}</div>
                 </div>
-                <span class="period">{ed.period}</span>
+                <div class="entry-side">
+                  <span class="period">{ed.period}</span>
+                </div>
               </div>
               <ul class="bullets">
                 {ed.points.map((pt) => <li>{pt}</li>)}
@@ -327,49 +347,47 @@ const socials = socialOrder
           <span class="num">07</span>
           <h2>Skills &amp; Tools</h2>
         </div>
-        <div class="grid-2">
+        <div class="ledger">
           {skills.map((g) => (
-            <article class="card skill-group reveal">
+            <div class="row skill-row reveal">
               <h3>{g.category}</h3>
-              <div class="skill-items">
-                {g.items.map((it) => <span>{it}</span>)}
-              </div>
-            </article>
+              <p class="skill-items">{g.items.join(' · ')}</p>
+            </div>
           ))}
         </div>
-        <div style="margin-top: 26px;">
-          <h3 style="font-size: 1.02rem; margin-bottom: 12px; color: var(--accent-ink);">Beyond the lab</h3>
-          <div class="interests">
-            {interests.map((i) => <span>{i}</span>)}
-          </div>
-        </div>
+        <p class="interests-line">
+          <span class="kw-label">Beyond the lab</span>
+          <span class="kw-terms">{interests.join(' · ')}</span>
+        </p>
       </div>
     </section>
 
     <!-- Contact -->
     <section id="contact" class="section contact">
       <div class="container">
-        <h2>Let&apos;s connect</h2>
-        <p>
-          Open to research collaborations, systematic reviews, and academic opportunities.
-          The best way to reach me is by email.
-        </p>
-        <div class="contact-links">
-          <a class="btn btn-primary" href={`mailto:${profile.email}`}>{profile.email}</a>
-        </div>
-        <div class="social-row">
-          {socials.map((s) => (
-            <a
-              class="social"
-              href={s.href}
-              aria-label={s.label}
-              title={s.label}
-              target={s.external ? '_blank' : undefined}
-              rel={s.external ? 'noopener noreferrer' : undefined}
-            >
-              <Fragment set:html={icons[s.key]} />
-            </a>
-          ))}
+        <div class="contact-box">
+          <h2>Let&apos;s connect</h2>
+          <p>
+            Open to research collaborations, systematic reviews, and academic opportunities.
+            The best way to reach me is by email.
+          </p>
+          <div class="contact-links">
+            <a class="btn btn-primary" href={`mailto:${profile.email}`}>{profile.email}</a>
+          </div>
+          <div class="social-row">
+            {socials.map((s) => (
+              <a
+                class="social"
+                href={s.href}
+                aria-label={s.label}
+                title={s.label}
+                target={s.external ? '_blank' : undefined}
+                rel={s.external ? 'noopener noreferrer' : undefined}
+              >
+                <Fragment set:html={icons[s.key]} />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -377,11 +395,11 @@ const socials = socialOrder
 
   <footer class="site-footer">
     <div class="container">
-      © {new Date().getFullYear()} {profile.name} · {profile.location} · Built with
+      © {new Date().getFullYear()} {profile.name} · {profile.location}<br />
+      Typeset in Besley, Libre Franklin &amp; Martian Mono · Built with
       <a href="https://astro.build" target="_blank" rel="noopener noreferrer">Astro</a>
     </div>
   </footer>
 
-  <canvas id="margin-network" class="margin-canvas" aria-hidden="true"></canvas>
-  <script src="../scripts/evidence-network.js"></script>
+  <script src="../scripts/ecg-trace.js"></script>
 </Layout>
