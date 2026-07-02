@@ -326,7 +326,7 @@ export const experience: Experience[] = [
     role: 'Research Associate',
     org: 'Operation MetaMind',
     period: 'July 2025 – Present',
-    location: 'Remote',
+    location: 'Hyderabad, India',
     points: [
       'Contributing to an independent research collective focused on systematic reviews, meta-analyses, registry-based cohorts, decision modeling, and reproducible evidence synthesis.',
       'Collaborating across project teams on protocol development, screening, data extraction, manuscript preparation, and conference abstract submissions.',
