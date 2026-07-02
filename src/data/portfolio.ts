@@ -403,8 +403,8 @@ export const education: Education[] = [
     period: 'Expected May 2028',
     location: 'Hyderabad, India',
     points: [
-      'Distinction in Biochemistry; First Class in Pharmacology.',
-      'Active research club member and OMC C.A.R.E.S. volunteer supporting community outreach programs.',
+      'Distinction in Biochemistry; First Division in Pharmacology and Forensic Medicine.',
+      'Active research club member and previous OMC C.A.R.E.S. volunteer.',
     ],
   },
   {
