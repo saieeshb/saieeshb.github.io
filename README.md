@@ -1,4 +1,4 @@
-# saieeshb.github.io
+# saieesh.dev
 
 Personal academic portfolio for **Saieesh Bairam** — MBBS candidate at Osmania Medical College and clinical researcher.
 
@@ -34,7 +34,7 @@ site and publishes it to GitHub Pages.
 **One-time setup:** in the repository on GitHub, go to **Settings → Pages** and
 set **Source** to **GitHub Actions**.
 
-The site is served at <https://saieeshb.github.io>.
+The site is served at <https://saieesh.dev>.
 
 ## Project structure
 
