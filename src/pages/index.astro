@@ -90,7 +90,7 @@ const socials = socialOrder
         <span class="hero-eyebrow"><span class="dot"></span>Medical Student · Researcher · Surgery Aspirant </span>
         <h1>{profile.name}</h1>
         <p class="lede">{profile.tagline}</p>
-        <p class="intro">{profile.intro}</p>
+        <p class="intro" set:html={profile.intro}></p>
         <div class="hero-meta">
           <span>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>

@@ -11,7 +11,7 @@ export const profile = {
   tagline:
     'MS4 Student at Osmania Medical College focused on evidence synthesis and clinical research.',
   intro:
-    "I'm an MBBS student at Osmania Medical College in Hyderabad with a strong interest in evidence-based medicine and clinical research. My work spans systematic reviews and meta-analyses, registry-based cohort studies, decision-analytic modeling, cross-sectional studies, and peer-reviewed case reports across oncology, neurology, surgery, and public health, complemented by research associate, editorial, and peer-review roles.",
+    '<strong>I\'m an MBBS student</strong> at Osmania Medical College in Hyderabad with a strong interest in <strong>evidence-based medicine</strong> and <strong>surgery-focused clinical research</strong>.<br><br>My work spans <strong>SRMAs, analytic modeling, cross-sectional studies, case reports</strong> and <strong>cohort studies</strong> across oncology, neurology, and surgery.',
   // Optional social/profile links. Leave a value empty ('') to hide the link.
   links: {
     email: 'mailto:hi@saieesh.dev',
