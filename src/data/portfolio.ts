@@ -11,7 +11,7 @@ export const profile = {
   tagline:
     'MBBS candidate at Osmania Medical College focused on evidence synthesis and clinical research.',
   intro:
-    "I'm an MBBS candidate at Osmania Medical College in Hyderabad with a strong interest in evidence-based medicine and clinical research. My work spans systematic reviews and meta-analyses, cross-sectional studies, and peer-reviewed case reports across neurology, surgery, and public health — complemented by editorial and peer-review roles for international medical journals.",
+    "I'm an MBBS candidate at Osmania Medical College in Hyderabad with a strong interest in evidence-based medicine and clinical research. My work spans systematic reviews and meta-analyses, registry-based cohort studies, decision-analytic modeling, cross-sectional studies, and peer-reviewed case reports across oncology, neurology, surgery, and public health — complemented by research associate, editorial, and peer-review roles.",
   // Optional social/profile links. Leave a value empty ('') to hide the link.
   links: {
     email: 'mailto:hi@saieesh.dev',
@@ -25,10 +25,31 @@ export const profile = {
 
 export const stats = [
   { value: '2', label: 'Peer-reviewed publications' },
-  { value: '3', label: 'Research projects' },
+  { value: '14', label: 'Research projects' },
   { value: '2', label: 'Editorial & review roles' },
   { value: 'ICMR', label: 'STS 2025 grant recipient' },
 ];
+
+export const researchFilters = [
+  { key: 'all', label: 'All' },
+  { key: 'srma', label: 'Reviews & Meta' },
+  { key: 'database', label: 'Database' },
+  { key: 'model', label: 'Decision Models' },
+  { key: 'methods', label: 'Methods' },
+  { key: 'clinical', label: 'Clinical Studies' },
+];
+
+export const researchStatusLabels = {
+  accepted: 'Accepted',
+  registered: 'Registered',
+  submitted: 'Submitted',
+  active: 'Active',
+  progress: 'In development',
+  ongoing: 'Ongoing',
+  completed: 'Completed',
+} as const;
+
+export type ResearchStatus = keyof typeof researchStatusLabels;
 
 export type ResearchProject = {
   title: string;
@@ -36,9 +57,12 @@ export type ResearchProject = {
   period: string;
   role?: string;
   description: string;
+  note?: string;
   contributions?: string[];
   tags?: string[];
-  status?: 'ongoing' | 'completed';
+  lanes?: string[];
+  code?: string;
+  status?: ResearchStatus;
 };
 
 export const research: ResearchProject[] = [
@@ -57,18 +81,165 @@ export const research: ResearchProject[] = [
       'Data extraction & analysis',
     ],
     tags: ['Cross-Sectional Study', 'Public Health', 'ICMR Grant'],
+    lanes: ['clinical'],
     status: 'ongoing',
   },
   {
-    title:
-      'Long-Term Oncological & Functional Outcomes of RAMIE vs. Conventional MIE for Esophageal Cancer',
+    title: 'Is robotic esophagectomy actually better than the standard approach?',
     org: 'Operation MetaMind',
     period: 'May 2025 – Present',
     role: 'Systematic Review & Meta-Analysis',
     description:
-      'Assisting a systematic review and meta-analysis comparing Robot-Assisted Minimally Invasive Esophagectomy (RAMIE) with conventional Minimally Invasive Esophagectomy (MIE), evaluating long-term oncological and functional outcomes in esophageal cancer.',
-    tags: ['Systematic Review', 'Meta-Analysis', 'Surgical Oncology'],
-    status: 'ongoing',
+      'A meta-analysis of surgical, oncological, and survival outcomes in robotic versus conventional minimally invasive esophagectomy.',
+    note: 'ACS Clinical Congress 2026. Fast-tracked for JACS.',
+    tags: ['Reviews & Meta', 'Surgical Oncology', 'Esophageal Cancer'],
+    lanes: ['srma'],
+    code: 'RAMIE',
+    status: 'accepted',
+  },
+  {
+    title: 'Does a BRAF inhibitor work in a leukemia too rare to run a trial on?',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'Proportional Meta-Analysis',
+    description:
+      'A proportional meta-analysis of response and survival with vemurafenib in resistant hairy cell leukemia.',
+    note: 'SOHO 2026. Registered on PROSPERO, in screening.',
+    tags: ['Reviews & Meta', 'Hematology', 'Oncology'],
+    lanes: ['srma'],
+    code: 'VEMURAF',
+    status: 'accepted',
+  },
+  {
+    title: 'Does prophylactic mesh prevent parastomal hernia, or only delay it?',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'Meta-Analysis with Trial Sequential Analysis',
+    description:
+      'A meta-analysis with trial sequential analysis, pooling long-term follow-up the guidelines were written without.',
+    note: 'Research Hackathon 2026 finalist. Targeting ACS 2027.',
+    tags: ['Reviews & Meta', 'Trial Sequential Analysis', 'Surgery'],
+    lanes: ['srma'],
+    code: 'CHIMNEY',
+    status: 'progress',
+  },
+  {
+    title: 'Has anal cancer treatment actually changed across three decades?',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'SEER Population-Based Cohort',
+    description:
+      'A SEER population-based cohort of treatment trends and survival, 2000 to 2023.',
+    note: 'Registered on OSF. Journal article in progress.',
+    tags: ['Database', 'SEER', 'Cancer Outcomes'],
+    lanes: ['database'],
+    code: 'Anl_CA',
+    status: 'registered',
+  },
+  {
+    title:
+      'Does Commission on Cancer accreditation improve resection and survival in gastric cancer?',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'SEER Population-Based Cohort',
+    description:
+      'A SEER population-based cohort of resectable gastric adenocarcinoma, accredited versus non-accredited centers.',
+    note: 'Abstract submitted, ACS Clinical Congress 2026.',
+    tags: ['Database', 'SEER', 'Gastric Cancer'],
+    lanes: ['database'],
+    code: 'SEER',
+    status: 'submitted',
+  },
+  {
+    title: 'Does surgical staging erase the racial survival gap?',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'SEER Equity Analysis',
+    description:
+      'A pan-cancer sentinel lymph node biopsy equity analysis using the new 2018+ SEER variables.',
+    note: 'Abstract submitted, ACS Clinical Congress 2026.',
+    tags: ['Database', 'SEER', 'Health Equity'],
+    lanes: ['database'],
+    code: 'SEER',
+    status: 'submitted',
+  },
+  {
+    title: 'Does resection beat non-operative management in oligometastatic colorectal cancer?',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'SEER Population-Based Cohort',
+    description:
+      'A SEER 17 population-based cohort, 2010 to 2023, comparing surgical resection with non-operative management.',
+    note: 'Abstract submitted, ACS Clinical Congress 2026.',
+    tags: ['Database', 'SEER', 'Colorectal Cancer'],
+    lanes: ['database'],
+    code: 'SEER',
+    status: 'submitted',
+  },
+  {
+    title: 'Is ctDNA-guided surveillance worth the cost in rectal cancer?',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'Decision-Analytic Model',
+    description:
+      'A decision-analytic model of ctDNA-augmented watch-and-wait after total neoadjuvant therapy, built on an active surveillance trial.',
+    note: 'In development.',
+    tags: ['Decision Models', 'ctDNA', 'Health Economics'],
+    lanes: ['model'],
+    code: 'MARKOV',
+    status: 'progress',
+  },
+  {
+    title: 'Decision-analytic modeling program',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'Health-Economic Modeling Track',
+    description:
+      'The training track and idea engine behind health-economic modeling in R.',
+    note: 'Active.',
+    tags: ['Decision Models', 'Methods', 'R'],
+    lanes: ['model', 'methods'],
+    code: 'DARTH',
+    status: 'active',
+  },
+  {
+    title: 'Plasma exchange or IVIG for osmotic demyelination syndrome?',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'Systematic Review',
+    description:
+      'A systematic review of case reports and series for a syndrome no trial will study.',
+    note: 'Registered on PROSPERO. Screening in progress.',
+    tags: ['Reviews & Meta', 'Neurology', 'Case Series'],
+    lanes: ['srma'],
+    code: 'SRMA ODS',
+    status: 'registered',
+  },
+  {
+    title: 'Population-based cancer registry cohort',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'Retrospective Cohort',
+    description:
+      'A retrospective cohort on Indian national registry data, via ICMR.',
+    note: 'In development.',
+    tags: ['Database', 'NCRP', 'Cancer Registry'],
+    lanes: ['database'],
+    code: 'NCRP',
+    status: 'progress',
+  },
+  {
+    title: 'A faster risk-of-bias workflow',
+    org: 'Operation MetaMind',
+    period: 'Current',
+    role: 'Reproducible Methods Pipeline',
+    description:
+      'A reproducible ROBINS-I and ROB2 pipeline, packaged as a method in its own right.',
+    note: 'Cochrane Colloquium 2026. In active use.',
+    tags: ['Methods', 'Risk of Bias', 'Cochrane'],
+    lanes: ['methods'],
+    code: 'RoBer | COP',
+    status: 'accepted',
   },
   {
     title:
@@ -80,6 +251,7 @@ export const research: ResearchProject[] = [
       'A network meta-analysis of randomized controlled trials assessing the comparative efficacy of non-pharmacological interventions for motor symptoms in Parkinson’s disease, prepared as an abstract proposal for the AAN Fall Conference 2024.',
     contributions: ['Protocol formation', 'Data extraction & analysis'],
     tags: ['Network Meta-Analysis', 'Neurology', 'RCTs'],
+    lanes: ['srma'],
     status: 'completed',
   },
 ];
@@ -150,6 +322,17 @@ export type Experience = {
 };
 
 export const experience: Experience[] = [
+  {
+    role: 'Research Associate',
+    org: 'Operation MetaMind',
+    period: 'July 2025 – Present',
+    location: 'Remote',
+    points: [
+      'Contributing to an independent research collective focused on systematic reviews, meta-analyses, registry-based cohorts, decision modeling, and reproducible evidence synthesis.',
+      'Collaborating across project teams on protocol development, screening, data extraction, manuscript preparation, and conference abstract submissions.',
+      'Supporting methodologically rigorous workflows across oncology, surgery, neurology, and health-economic research projects.',
+    ],
+  },
   {
     role: 'Deputy Head of Technical Team',
     org: 'OMC C.A.R.E.S.',

@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import {
   profile,
   stats,
+  researchFilters,
+  researchStatusLabels,
   research,
   publications,
   publicationsNote,
@@ -140,11 +142,25 @@ const socials = socialOrder
           <span class="num">01</span>
           <h2>Research Projects</h2>
         </div>
-        <div class="stack">
+        <div class="research-filters" role="tablist" aria-label="Filter research projects">
+          {researchFilters.map((filter) => (
+            <button
+              class={`research-filter ${filter.key === 'all' ? 'is-active' : ''}`}
+              type="button"
+              role="tab"
+              aria-selected={filter.key === 'all' ? 'true' : 'false'}
+              data-filter={filter.key}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+        <div class="stack research-stack" id="researchGrid">
           {research.map((r) => (
-            <article class="card reveal">
+            <article class="card reveal" data-research-lanes={r.lanes?.join(' ') ?? ''}>
               <div class="item-head">
                 <div>
+                  {r.code && <div class="project-code">{r.code}</div>}
                   <div class="item-title">{r.title}</div>
                   <div class="item-org">{r.org}</div>
                   {r.role && <div class="item-role">{r.role}</div>}
@@ -152,6 +168,7 @@ const socials = socialOrder
                 <span class="period">{r.period}</span>
               </div>
               <p class="item-desc">{r.description}</p>
+              {r.note && <p class="item-note">{r.note}</p>}
               {r.contributions && (
                 <div class="contrib">
                   <span class="contrib-label">Conducted</span>
@@ -161,7 +178,7 @@ const socials = socialOrder
               <div class="tags">
                 {r.status && (
                   <span class={`badge ${r.status}`}>
-                    <span class="pip"></span>{r.status === 'ongoing' ? 'Ongoing' : 'Completed'}
+                    <span class="pip"></span>{researchStatusLabels[r.status]}
                   </span>
                 )}
                 {r.tags?.map((t) => <span class="tag">{t}</span>)}

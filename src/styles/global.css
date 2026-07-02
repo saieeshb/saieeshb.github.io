@@ -535,12 +535,58 @@ h4 {
   gap: 18px;
 }
 
+.research-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 26px;
+}
+
+.research-filter {
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  background: var(--bg-elevated);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.research-filter:hover,
+.research-filter.is-active {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.research-filter:hover {
+  transform: translateY(-1px);
+}
+
+.research-stack .card.is-hidden {
+  display: none;
+}
+
 .item-head {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
   flex-wrap: wrap;
+}
+
+.project-code {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 8px;
+  color: var(--accent);
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
 .item-title {
@@ -581,6 +627,12 @@ h4 {
   color: var(--ink-soft);
   margin-top: 14px;
   font-size: 0.97rem;
+}
+
+.item-note {
+  color: var(--ink-muted);
+  margin-top: 10px;
+  font-size: 0.88rem;
 }
 
 .bullets {
@@ -642,6 +694,27 @@ h4 {
 .badge.ongoing {
   color: #2f7d5b;
   background: color-mix(in srgb, #2f7d5b 14%, transparent);
+}
+
+.badge.accepted,
+.badge.active {
+  color: #2f7d5b;
+  background: color-mix(in srgb, #2f7d5b 14%, transparent);
+}
+
+.badge.registered {
+  color: #4d65d9;
+  background: color-mix(in srgb, #4d65d9 14%, transparent);
+}
+
+.badge.submitted {
+  color: var(--gold);
+  background: color-mix(in srgb, var(--gold) 16%, transparent);
+}
+
+.badge.progress {
+  color: var(--ink-muted);
+  background: var(--bg-subtle);
 }
 
 .badge.completed {

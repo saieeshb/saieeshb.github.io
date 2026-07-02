@@ -126,6 +126,25 @@ const ogImage = Astro.site ? new URL('/og-image.png', Astro.site).href : '/og-im
           );
         });
       }
+
+      // Research project filters
+      const researchFilters = document.querySelectorAll('.research-filter');
+      const researchCards = document.querySelectorAll('[data-research-lanes]');
+      researchFilters.forEach((button) => {
+        button.addEventListener('click', () => {
+          const filter = button.getAttribute('data-filter') || 'all';
+          researchFilters.forEach((item) => {
+            const active = item === button;
+            item.classList.toggle('is-active', active);
+            item.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          researchCards.forEach((card) => {
+            const lanes = (card.getAttribute('data-research-lanes') || '').split(' ');
+            const visible = filter === 'all' || lanes.includes(filter);
+            card.classList.toggle('is-hidden', !visible);
+          });
+        });
+      });
     </script>
   </body>
 </html>
